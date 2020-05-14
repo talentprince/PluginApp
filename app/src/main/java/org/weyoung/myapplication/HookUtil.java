@@ -57,7 +57,6 @@ public class HookUtil {
 
     public static void hookActivityThread() {
         try {
-
             Class<?> activityThreadClazz = Class.forName("android.app.ActivityThread");
             Field currentActivityThreadField = activityThreadClazz.getDeclaredField("sCurrentActivityThread");
             currentActivityThreadField.setAccessible(true);
@@ -90,7 +89,6 @@ public class HookUtil {
                     return false;
                 }
             });
-
         } catch (Exception e) {
             e.printStackTrace();
         }

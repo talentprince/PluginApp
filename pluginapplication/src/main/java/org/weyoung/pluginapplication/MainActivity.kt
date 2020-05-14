@@ -1,13 +1,14 @@
 package org.weyoung.pluginapplication
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 
-class MainActivity : AppCompatActivity() {
+internal class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
-        println("Hello, I am plugin Activity")
+        LayoutInflater.from(mContext).inflate(R.layout.activity_main, null).run {
+            setContentView(this)
+        }
     }
 }

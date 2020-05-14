@@ -1,13 +1,10 @@
 package org.weyoung.myapplication;
 
 import android.content.Context;
-import android.content.Intent;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 
 import dalvik.system.DexClassLoader;
 
