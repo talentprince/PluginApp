@@ -1,6 +1,10 @@
 package org.weyoung.myapplication;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
+
+import androidx.annotation.NonNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -36,6 +40,7 @@ public class HookUtil {
                         }
                         Intent proxyIntent = new Intent();
                         proxyIntent.setClassName("org.weyoung.myapplication", ProxyActivity.class.getName());
+                        proxyIntent.putExtra("pluginIntent", (Intent) args[index]);
                         args[index] = proxyIntent;
                     }
                     return method.invoke(IActivityManager, args);
@@ -48,5 +53,46 @@ public class HookUtil {
             e.printStackTrace();
         }
 
+    }
+
+    public static void hookActivityThread() {
+        try {
+
+            Class<?> activityThreadClazz = Class.forName("android.app.ActivityThread");
+            Field currentActivityThreadField = activityThreadClazz.getDeclaredField("sCurrentActivityThread");
+            currentActivityThreadField.setAccessible(true);
+            Object activityThread = currentActivityThreadField.get(null);
+
+            Field handlerField = activityThreadClazz.getDeclaredField("mH");
+            handlerField.setAccessible(true);
+            Object handler = handlerField.get(activityThread);
+
+            Class<?> handlerClazz = Class.forName("android.os.Handler");
+            Field callbackField = handlerClazz.getDeclaredField("mCallback");
+            callbackField.setAccessible(true);
+            callbackField.set(handler, new Handler.Callback() {
+                @Override
+                public boolean handleMessage(@NonNull Message msg) {
+                    if (msg.what == 100) {
+                        try {
+                            Field intentField = msg.obj.getClass().getDeclaredField("intent");
+                            intentField.setAccessible(true);
+                            Intent proxyIntent = (Intent) intentField.get(msg.obj);
+                            Intent pluginIntent = proxyIntent.getParcelableExtra("pluginIntent");
+                            if (pluginIntent != null) {
+                                intentField.set(msg.obj, pluginIntent);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return false;
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

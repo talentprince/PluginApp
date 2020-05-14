@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         btn.setOnClickListener {
             startActivity(Intent().apply {
-                component = ComponentName("org.weyoung.pluginapplication", "MainActivity")
+                component = ComponentName("org.weyoung.pluginapplication", "org.weyoung.pluginapplication.MainActivity")
             })
         }
 

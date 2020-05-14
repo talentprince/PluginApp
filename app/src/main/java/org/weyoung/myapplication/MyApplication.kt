@@ -7,5 +7,6 @@ class MyApplication : Application() {
         super.onCreate()
         PluginLoader.load(this)
         HookUtil.hookStartActivity()
+        HookUtil.hookActivityThread()
     }
 }
